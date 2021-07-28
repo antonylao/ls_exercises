@@ -1,0 +1,1 @@
+Put in this folder all the exercises from Launch School.
