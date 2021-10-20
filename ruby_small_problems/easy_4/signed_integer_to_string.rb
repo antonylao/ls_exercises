@@ -23,23 +23,25 @@ def signed_integer_to_string(integer)
     integer = - integer
   end
 
-  minus ? integer_to_string(integer).prepend('-') : integer_to_string(integer).prepend('+')
+  sign = minus ? '-' : '+'
+
+  integer_to_string(integer).prepend(sign)
 end
 
-def signed_integer_to_string(integer)
+# def signed_integer_to_string(integer)
 
-  sign = ['', '+', '-']
+#   sign = ['', '+', '-']
 
-  case (integer <=> 0)
-  when 1
-    choice = 1
-  when -1
-    integer = - integer
-    choice = 2
-  else choice = 0
-  end
-  integer_to_string(integer).prepend(sign[choice])
-end
+#   case (integer <=> 0)
+#   when 1
+#     choice = 1
+#   when -1
+#     integer = - integer
+#     choice = 2
+#   else choice = 0
+#   end
+#   integer_to_string(integer).prepend(sign[choice])
+# end
 
 
 p signed_integer_to_string(4321) == '+4321',
