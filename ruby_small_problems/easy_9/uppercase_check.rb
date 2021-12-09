@@ -1,0 +1,18 @@
+def uppercase?(string)
+  string.chars.all? do |char| #NB: [].all? returns true
+    char =~ /[^a-z]/
+  end
+end
+
+# LS solution
+def uppercase?(string)
+  string == string.upcase
+end
+
+p uppercase?('t') == false
+p uppercase?('T') == true
+p uppercase?('Four Score') == false
+p uppercase?('FOUR SCORE') == true
+p uppercase?('4SCORE!') == true
+
+p uppercase?('') #== true
