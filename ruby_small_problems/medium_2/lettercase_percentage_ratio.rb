@@ -24,6 +24,16 @@ def letter_percentages(string)
   hash
 end
 
+#solution 2 using count
+def letter_percentages(str)
+  length = str.length
+  lowercase_count = str.count('a-z')
+  uppercase_count = str.count('A-Z')
+  neither_count = length - lowercase_count - uppercase_count
+  values = [lowercase_count, uppercase_count, neither_count].map {|value| ((value / length.to_f) * 100).round(1)}
+  ([:lowercase, :uppercase, :neither].zip(values)).to_h
+end
+
 #LS Solution
 =begin
 def letter_percentages(string)

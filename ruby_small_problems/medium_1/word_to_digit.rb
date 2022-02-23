@@ -139,3 +139,93 @@ def word_to_digit(string)
   end
   string
 end
+
+#other solutions 1 (not further exploration)
+
+NUMS = {'zero' => 0, 'one' => 1, 'two' => 2, 'three' => 3, 'four' => 4, 'five' => 5, 'six' => 6, 'seven' => 7, 'eight' => 8, 'nine' => 9}
+def word_to_digit(string)
+  string.gsub(/#{NUMS.keys.join('|')}/, NUMS)
+end
+
+#other solution 2
+STRING_DIGITS = {'zero' => '0',
+                 'one' => '1',
+                 'two' => '2',
+                 'three' => '3',
+                 'four' => '4',
+                 'five' => '5',
+                 'six' => '6',
+                 'seven' => '7',
+                 'eight' => '8',
+                 'nine' => '9'
+                 }
+
+# NOTE: we are destructively mutating the same string. hence the use of gsub! and not gsub.
+
+def word_to_digit(string) #=> solving all 3 requested solutions with one method to keep things simple.
+  STRING_DIGITS.keys.each do |key|
+    string.gsub!(/\b#{key}\b/i, STRING_DIGITS[key])  # question 1: dealing with uppercased and capitlaized word numbers
+  end
+  string.gsub!(/(\d)\s/, '\1') # question 2 : eliminating the space between each number.
+
+  string.gsub!(/\b(\d{3})(\d{3})(\d{4})\b/, '(\1) \2-\3') # question 3: formatting our digits to our liking.
+end
+
+#other solution 3
+
+# ## Algorithm
+#
+# The program could accomplish its task by...
+# 1. Taking the input string.
+# 2. Using Regexp to capture each whole string of word numbers, then mutating the whole way...
+#      a. Take this whole string of word numbers and replace the word numbers with numbers...
+#      b. Take the whole string of word numbers again, remove all spaces...
+#      c. Take the whole string of word numbers again, check if have 10 numbers, replace with properly formatted phone # (xxx) xxx-xxxx
+#      d. Return mutated whole string of numbers to original, mutating regex/method to replace the whole word number string in the original string and return the now mutated original string.
+
+INTEGERS = {
+  'one' =>   '1', 'two' =>   '2', 'three' => '3',
+  'four' =>  '4', 'five' =>  '5', 'six' =>   '6',
+  'seven' => '7', 'eight' => '8', 'nine' =>  '9',
+  'zero'  => '0'
+}.freeze
+
+def word_to_digit(string)
+  potential_matches = 'one|two|three|four|five|six|seven|eight|nine|zero'
+  catch_wordnums_regex = /(          # Start regex and capture group
+    \b                               # Capure must start with word boundary
+    (#{potential_matches})           # Use 'potential_matches' to add alternation so any word name will match
+    \b                               # Capture must end with word boundary
+    (\s(?=(#{potential_matches})))?  # Include space after only if the next word is also a number word (and both space and next number word are present)
+    )+                               # End capture group, + denoting that 1 number word or a whole string of them may be matched at once
+  /xi                                # end regex, xi at end allows (x) having this regex on multiple lines w/ comments and (i) ignoring case: T vs t, etc.
+
+
+  string.gsub!(catch_wordnums_regex) do |number_words_section|
+    number_words_section.gsub!(/(#{potential_matches})/i) { |number_match| INTEGERS[number_match.downcase] }
+    number_words_section.gsub!(/\s/, '')
+    number_words_section.gsub!(/(\d{3})(\d{3})(\d{4})/, '(\1) ' + '\2-' + '\3')
+
+    number_words_section
+  end
+end
+
+p string = 'Please call me at five five five one two Three four. Thanks.'
+p string.object_id
+p word_to_digit(string) # "Please call me at 5551234. Thanks."
+p string.object_id
+puts
+
+p string = 'Please call me at two two two five five five one two three four at one two. Thanks.'
+p string.object_id
+p word_to_digit(string) # "Please call me at (222) 555-1234 at 12. Thanks."
+p string
+p string.object_id
+puts
+
+p string = "Could you please call me at one two three four five six seven eight nine zero, using extension 12 45?"
+p string.object_id
+p word_to_digit(string) # "Could you please call me at (123) 456-7890, using extension 12 45?"
+p string
+p string.object_id
+puts

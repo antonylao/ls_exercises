@@ -1,7 +1,7 @@
 require 'date'
 
 def friday_13th(year)
-  current_date = Date.new(year, 1, 13, Date::GREGORIAN)
+  current_date = Date.new(year, 1, 13, Date::GREGORIAN) #Date.iso8601("#{year}-01-13")
   counter = 0
 
   while current_date.year <= year
